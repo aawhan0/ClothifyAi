@@ -9,3 +9,7 @@ installing these libraries:
 4. matplotlib
 5. pillow
 6. torchvision and torch (for GAN work)
+
+
+dude, this venv was getting uploaded to github repo and it was creating a ruckus
+so i had to include it in .gitignore
