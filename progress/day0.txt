@@ -1,2 +1,11 @@
 this is day0 of starting this project, i am really excited to see where this goes.
 its 2 am rn, and i am just gonna make some initiating stuff right now.
+
+
+installing these libraries:
+1. mediapipe,
+2. opencv-python
+3. numpy
+4. matplotlib
+5. pillow
+6. torchvision and torch (for GAN work)
