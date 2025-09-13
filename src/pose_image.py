@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import json
 
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
@@ -14,3 +15,9 @@ if results.pose_landmarks:
     cv2.imshow("Pose Estimation", image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+    keypoints = []
+    for lm in results.pose_landmarks.landmark:
+        keypoints.append({'x': lm.x, 'y': lm.y, 'z': lm.z, 'visibility': lm.visibility})
+    with open('keypoints.json', 'w') as f:
+        json.dump(keypoints, f, indent=4)
