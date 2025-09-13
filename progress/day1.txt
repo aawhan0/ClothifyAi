@@ -1,0 +1,4 @@
+i have successfuly done the work for image. now i have to do it for real time webcam input.
+okay it is done, it is glitching though. like its 12am here and it started detecting a body behind me, freaked me out tbh!
+
+to exit,press escape.
