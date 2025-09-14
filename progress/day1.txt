@@ -4,4 +4,4 @@ okay it is done, it is glitching though. like its 12am here and it started detec
 to exit,press escape.
 
 
-# i had to install rembg library for person segmentation process.
+# i installed rembg and onnxruntime modules for person segmentation process.
