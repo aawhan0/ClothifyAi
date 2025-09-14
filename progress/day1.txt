@@ -2,3 +2,6 @@ i have successfuly done the work for image. now i have to do it for real time we
 okay it is done, it is glitching though. like its 12am here and it started detecting a body behind me, freaked me out tbh!
 
 to exit,press escape.
+
+
+# i had to install rembg library for person segmentation process.
