@@ -1,0 +1,3 @@
+person1_masked.png garment1_masked.png
+person2_masked.png garment2_masked.png
+person3_masked.png garment3_masked.png
