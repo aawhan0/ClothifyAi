@@ -6,3 +6,16 @@ i also changed pose_image.py imshow to imwrite to avoid gui issues.
     almost everything is going smooth, its just that the garment_masked.png isnt imposing properly on person_masked properly.
     for that, I now have to study on how to set landmarks for neck, sleeve etc. Mediapipe wont allow me to do that as it is not 
     made for garments, and for just Body Landmarks.
+
+-> INSTALLATIONS:
+    I installed scikit-image library.
+
+
+-> IMPLEMENTATIONS:
+    I need to define two things:
+    1. Source points- Keypoints on the garment image
+    2. Destination points- Corresponding keypoints on the person image
+    
+    but this would not be feasible. cant manually do this for every garment image.
+    Hence, I will be using some open source framework for this.
+    
