@@ -1,3 +1,8 @@
 i had to uninstall opencv-python-headless, because it was disabling the gui popups.
 
 i also changed pose_image.py imshow to imwrite to avoid gui issues.
+
+-> MAJOR PROGRESS:
+    almost everything is going smooth, its just that the garment_masked.png isnt imposing properly on person_masked properly.
+    for that, I now have to study on how to set landmarks for neck, sleeve etc. Mediapipe wont allow me to do that as it is not 
+    made for garments, and for just Body Landmarks.
