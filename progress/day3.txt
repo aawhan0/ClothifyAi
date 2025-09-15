@@ -7,6 +7,14 @@ i also changed pose_image.py imshow to imwrite to avoid gui issues.
     for that, I now have to study on how to set landmarks for neck, sleeve etc. Mediapipe wont allow me to do that as it is not 
     made for garments, and for just Body Landmarks.
 
+    I have used an external src repo. Now i need to do some changes as resizing the sample.jpg and stuff
+    I got to know about Conda;
+    
+    Conda: an Open source package used for python and scientific computing. Unlike PIP this manages packages for any 
+    language. Helps to handle environment setups across different platforms and languages.
+    
+    
+
 -> INSTALLATIONS:
     I installed scikit-image library.
 
