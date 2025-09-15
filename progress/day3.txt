@@ -1,0 +1,3 @@
+i had to uninstall opencv-python-headless, because it was disabling the gui popups.
+
+i also changed pose_image.py imshow to imwrite to avoid gui issues.

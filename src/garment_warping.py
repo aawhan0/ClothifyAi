@@ -2,8 +2,12 @@ import cv2
 import numpy as np
 import json
 
-garment_img = cv2.imread('garment.png')
+garment_img = cv2.imread('garment_masked.png')
 person_img = cv2.imread('person_masked.png')
+
+if garment_img is None or person_img is None:
+    print("Error: garment_masked.png or person_masked.png not found!")
+    exit()
 
 with open('keypoints.json') as f:
     keypoints = json.load(f)
