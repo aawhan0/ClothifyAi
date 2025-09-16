@@ -50,8 +50,8 @@ class CPDataset(data.Dataset):
         c_name = self.c_names[index]
         im_name = self.im_names[index]
         if self.stage == 'GMM':
-            c = Image.open(osp.join(self.data_path, 'cloth', c_name))
-            cm = Image.open(osp.join(self.data_path, 'cloth-mask', c_name)).convert('L')
+            c = Image.open(osp.join(self.data_path, 'garment_masked', c_name)).convert('RGB')
+            cm = Image.open(osp.join(self.data_path, 'garment_masked', c_name)).convert('L')
         else:
             c = Image.open(osp.join(self.data_path, 'warp-cloth', im_name))    # c_name, if that is used when saved
             cm = Image.open(osp.join(self.data_path, 'warp-mask', im_name)).convert('L')    # c_name, if that is used when saved
@@ -63,7 +63,7 @@ class CPDataset(data.Dataset):
         cm.unsqueeze_(0)
 
         # person image
-        im = Image.open(osp.join(self.data_path, 'image', im_name))
+        im = Image.open(osp.join(self.data_path, 'person_masked', im_name)).convert('RGB')
         im = self.transform(im)  # [-1,1]
 
         """

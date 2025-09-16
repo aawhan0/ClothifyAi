@@ -433,7 +433,7 @@ class VGGLoss(nn.Module):
     def __init__(self, layids=None):
         super(VGGLoss, self).__init__()
         self.vgg = Vgg19()
-        self.vgg.cuda()
+        self.vgg.cpu()
         self.criterion = nn.L1Loss()
         self.weights = [1.0/32, 1.0/16, 1.0/8, 1.0/4, 1.0]
         self.layids = layids
@@ -509,10 +509,9 @@ class GMM(nn.Module):
             1, ngf=64, n_layers=3, norm_layer=nn.BatchNorm2d)
         self.l2norm = FeatureL2Norm()
         self.correlation = FeatureCorrelation()
-        self.regression = FeatureRegression(
-            input_nc=192, output_dim=2*opt.grid_size**2, use_cuda=True)
-        self.gridGen = TpsGridGen(
-            opt.fine_height, opt.fine_width, use_cuda=True, grid_size=opt.grid_size)
+        self.regression = FeatureRegression(input_nc=192, output_dim=2*opt.grid_size**2, use_cuda=False)
+        self.gridGen = TpsGridGen(opt.fine_height, opt.fine_width, use_cuda=False, grid_size=opt.grid_size)
+
 
     def forward(self, inputA, inputB):
         featureA = self.extractionA(inputA)
@@ -531,11 +530,11 @@ def save_checkpoint(model, save_path):
         os.makedirs(os.path.dirname(save_path))
 
     torch.save(model.cpu().state_dict(), save_path)
-    model.cuda()
+    # Removed model.cuda() to avoid GPU calls
 
 
 def load_checkpoint(model, checkpoint_path):
     if not os.path.exists(checkpoint_path):
         return
-    model.load_state_dict(torch.load(checkpoint_path))
-    model.cuda()
+    model.load_state_dict(torch.load(checkpoint_path, map_location='cpu'))
+    # Removed model.cuda() and added map_location='cpu' to force CPU loading

@@ -2,8 +2,8 @@ import cv2
 from rembg import remove
 import os
 
-input_folder = "data/person_images"      # Folder containing person images
-output_folder = "data/person_masked"     # Folder to save masked images
+input_folder = "../data/person_images"      # Folder containing person images
+output_folder = "../data/person_masked"     # Folder to save masked images
 
 os.makedirs(output_folder, exist_ok=True)
 

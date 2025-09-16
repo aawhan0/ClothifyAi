@@ -4,8 +4,8 @@ from PIL import Image
 import numpy as np
 import os
 
-input_folder = "data/garment_images"     # Folder containing garment images
-output_folder = "data/garment_masked"    # Folder to save masked images
+input_folder = "../data/garment_images"     # Folder containing garment images
+output_folder = "../data/garment_masked"    # Folder to save masked images
 
 os.makedirs(output_folder, exist_ok=True)
 

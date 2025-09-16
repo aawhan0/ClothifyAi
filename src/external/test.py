@@ -58,43 +58,39 @@ def get_opt():
 
 
 def test_gmm(opt, test_loader, model, board):
-    model.cuda()
+    device = torch.device('cuda' if opt.gpu_ids != "" and torch.cuda.is_available() else 'cpu')
+    model.to(device)
     model.eval()
 
     base_name = os.path.basename(opt.checkpoint)
     name = opt.name
     save_dir = os.path.join(opt.result_dir, name, opt.datamode)
-    if not os.path.exists(save_dir):
-        os.makedirs(save_dir)
+    os.makedirs(save_dir, exist_ok=True)
     warp_cloth_dir = os.path.join(save_dir, 'warp-cloth')
-    if not os.path.exists(warp_cloth_dir):
-        os.makedirs(warp_cloth_dir)
+    os.makedirs(warp_cloth_dir, exist_ok=True)
     warp_mask_dir = os.path.join(save_dir, 'warp-mask')
-    if not os.path.exists(warp_mask_dir):
-        os.makedirs(warp_mask_dir)
+    os.makedirs(warp_mask_dir, exist_ok=True)
     result_dir1 = os.path.join(save_dir, 'result_dir')
-    if not os.path.exists(result_dir1):
-        os.makedirs(result_dir1)
+    os.makedirs(result_dir1, exist_ok=True)
     overlayed_TPS_dir = os.path.join(save_dir, 'overlayed_TPS')
-    if not os.path.exists(overlayed_TPS_dir):
-        os.makedirs(overlayed_TPS_dir)
+    os.makedirs(overlayed_TPS_dir, exist_ok=True)
     warped_grid_dir = os.path.join(save_dir, 'warped_grid')
-    if not os.path.exists(warped_grid_dir):
-        os.makedirs(warped_grid_dir)
+    os.makedirs(warped_grid_dir, exist_ok=True)
+
     for step, inputs in enumerate(test_loader.data_loader):
         iter_start_time = time.time()
 
         c_names = inputs['c_name']
         im_names = inputs['im_name']
-        im = inputs['image'].cuda()
-        im_pose = inputs['pose_image'].cuda()
-        im_h = inputs['head'].cuda()
-        shape = inputs['shape'].cuda()
-        agnostic = inputs['agnostic'].cuda()
-        c = inputs['cloth'].cuda()
-        cm = inputs['cloth_mask'].cuda()
-        im_c = inputs['parse_cloth'].cuda()
-        im_g = inputs['grid_image'].cuda()
+        im = inputs['image'].to(device)
+        im_pose = inputs['pose_image'].to(device)
+        im_h = inputs['head'].to(device)
+        shape = inputs['shape'].to(device)
+        agnostic = inputs['agnostic'].to(device)
+        c = inputs['cloth'].to(device)
+        cm = inputs['cloth_mask'].to(device)
+        im_c = inputs['parse_cloth'].to(device)
+        im_g = inputs['grid_image'].to(device)
         shape_ori = inputs['shape_ori']  # original body shape without blurring
 
         grid, theta = model(agnostic, cm)
@@ -105,74 +101,68 @@ def test_gmm(opt, test_loader, model, board):
 
         visuals = [[im_h, shape, im_pose],
                    [c, warped_cloth, im_c],
-                   [warped_grid, (warped_cloth+im)*0.5, im]]
+                   [warped_grid, (warped_cloth + im) * 0.5, im]]
 
         # save_images(warped_cloth, c_names, warp_cloth_dir)
         # save_images(warped_mask*2-1, c_names, warp_mask_dir)
         save_images(warped_cloth, im_names, warp_cloth_dir)
         save_images(warped_mask * 2 - 1, im_names, warp_mask_dir)
-        save_images(shape_ori.cuda() * 0.2 + warped_cloth *
-                    0.8, im_names, result_dir1)
+        save_images(shape_ori.to(device) * 0.2 + warped_cloth * 0.8, im_names, result_dir1)
         save_images(warped_grid, im_names, warped_grid_dir)
         save_images(overlay, im_names, overlayed_TPS_dir)
 
-        if (step+1) % opt.display_count == 0:
-            board_add_images(board, 'combine', visuals, step+1)
+        if (step + 1) % opt.display_count == 0:
+            board_add_images(board, 'combine', visuals, step + 1)
             t = time.time() - iter_start_time
-            print('step: %8d, time: %.3f' % (step+1, t), flush=True)
+            print(f'step: {step + 1:8d}, time: {t:.3f}', flush=True)
 
 
 def test_tom(opt, test_loader, model, board):
-    model.cuda()
+    device = torch.device('cuda' if opt.gpu_ids != "" and torch.cuda.is_available() else 'cpu')
+    model.to(device)
     model.eval()
 
     base_name = os.path.basename(opt.checkpoint)
-    # save_dir = os.path.join(opt.result_dir, base_name, opt.datamode)
     save_dir = os.path.join(opt.result_dir, opt.name, opt.datamode)
-    if not os.path.exists(save_dir):
-        os.makedirs(save_dir)
+    os.makedirs(save_dir, exist_ok=True)
     try_on_dir = os.path.join(save_dir, 'try-on')
-    if not os.path.exists(try_on_dir):
-        os.makedirs(try_on_dir)
+    os.makedirs(try_on_dir, exist_ok=True)
     p_rendered_dir = os.path.join(save_dir, 'p_rendered')
-    if not os.path.exists(p_rendered_dir):
-        os.makedirs(p_rendered_dir)
+    os.makedirs(p_rendered_dir, exist_ok=True)
     m_composite_dir = os.path.join(save_dir, 'm_composite')
-    if not os.path.exists(m_composite_dir):
-        os.makedirs(m_composite_dir)
+    os.makedirs(m_composite_dir, exist_ok=True)
     im_pose_dir = os.path.join(save_dir, 'im_pose')
-    if not os.path.exists(im_pose_dir):
-        os.makedirs(im_pose_dir)
+    os.makedirs(im_pose_dir, exist_ok=True)
     shape_dir = os.path.join(save_dir, 'shape')
-    if not os.path.exists(shape_dir):
-        os.makedirs(shape_dir)
+    os.makedirs(shape_dir, exist_ok=True)
     im_h_dir = os.path.join(save_dir, 'im_h')
-    if not os.path.exists(im_h_dir):
-        os.makedirs(im_h_dir)  # for test data
+    os.makedirs(im_h_dir, exist_ok=True)  # for test data
 
     print('Dataset size: %05d!' % (len(test_loader.dataset)), flush=True)
     for step, inputs in enumerate(test_loader.data_loader):
         iter_start_time = time.time()
 
         im_names = inputs['im_name']
-        im = inputs['image'].cuda()
-        im_pose = inputs['pose_image']
-        im_h = inputs['head']
-        shape = inputs['shape']
+        device_inputs = {k: v.to(device) if torch.is_tensor(v) else v for k, v in inputs.items()}
 
-        agnostic = inputs['agnostic'].cuda()
-        c = inputs['cloth'].cuda()
-        cm = inputs['cloth_mask'].cuda()
+        im = device_inputs['image']
+        im_pose = device_inputs['pose_image']
+        im_h = device_inputs['head']
+        shape = device_inputs['shape']
+
+        agnostic = device_inputs['agnostic']
+        c = device_inputs['cloth']
+        cm = device_inputs['cloth_mask']
 
         # outputs = model(torch.cat([agnostic, c], 1))  # CP-VTON
         outputs = model(torch.cat([agnostic, c, cm], 1))  # CP-VTON+
         p_rendered, m_composite = torch.split(outputs, 3, 1)
-        p_rendered = F.tanh(p_rendered)
-        m_composite = F.sigmoid(m_composite)
+        p_rendered = torch.tanh(p_rendered)
+        m_composite = torch.sigmoid(m_composite)
         p_tryon = c * m_composite + p_rendered * (1 - m_composite)
 
         visuals = [[im_h, shape, im_pose],
-                   [c, 2*cm-1, m_composite],
+                   [c, 2 * cm - 1, m_composite],
                    [p_rendered, p_tryon, im]]
 
         save_images(p_tryon, im_names, try_on_dir)
@@ -182,16 +172,16 @@ def test_tom(opt, test_loader, model, board):
         save_images(m_composite, im_names, m_composite_dir)
         save_images(p_rendered, im_names, p_rendered_dir)  # For test data
 
-        if (step+1) % opt.display_count == 0:
-            board_add_images(board, 'combine', visuals, step+1)
+        if (step + 1) % opt.display_count == 0:
+            board_add_images(board, 'combine', visuals, step + 1)
             t = time.time() - iter_start_time
-            print('step: %8d, time: %.3f' % (step+1, t), flush=True)
+            print(f'step: {step + 1:8d}, time: {t:.3f}', flush=True)
 
 
 def main():
     opt = get_opt()
     print(opt)
-    print("Start to test stage: %s, named: %s!" % (opt.stage, opt.name))
+    print(f"Start to test stage: {opt.stage}, named: {opt.name}!")
 
     # create dataset
     test_dataset = CPDataset(opt)
@@ -200,8 +190,7 @@ def main():
     test_loader = CPDataLoader(opt, test_dataset)
 
     # visualization
-    if not os.path.exists(opt.tensorboard_dir):
-        os.makedirs(opt.tensorboard_dir)
+    os.makedirs(opt.tensorboard_dir, exist_ok=True)
     board = SummaryWriter(logdir=os.path.join(opt.tensorboard_dir, opt.name))
 
     # create model & test
@@ -217,9 +206,9 @@ def main():
         with torch.no_grad():
             test_tom(opt, test_loader, model, board)
     else:
-        raise NotImplementedError('Model [%s] is not implemented' % opt.stage)
+        raise NotImplementedError(f'Model [{opt.stage}] is not implemented')
 
-    print('Finished test %s, named: %s!' % (opt.stage, opt.name))
+    print(f'Finished test {opt.stage}, named: {opt.name}!')
 
 
 if __name__ == "__main__":
